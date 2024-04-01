@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "Usage: ob  inputfiles...\n")
+		fmt.Fprintf(os.Stderr, "Usage: ob  filepath...\n")
 		os.Exit(1)
 	}
 

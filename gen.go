@@ -48,7 +48,15 @@ func gen_dir_helper(base string, file fs.DirEntry, indent int, res *string) {
 	for i := 0; i < indent; i++ {
 		ind += "\t"
 	}
-	*res += "* " + ind + file.Name() + "\n"
+
+	// If is file, just return
+	if !file.IsDir() {
+		tmp := fmt.Sprintf("[[%s]]", strip_file_extension(file.Name()))
+		*res += ind + "* " + tmp + "\n"
+		return
+	} else {
+		*res += ind + "* " + file.Name() + "\n"
+	}
 
 	dir, err := os.Open(path)
 	if err != nil {
@@ -61,14 +69,9 @@ func gen_dir_helper(base string, file fs.DirEntry, indent int, res *string) {
 		log.Fatalf("Error: %v", err)
 	}
 
+	indent += 1
 	for _, entry := range entries {
-		if entry.IsDir() {
-			indent += 1
-			gen_dir_helper(path, entry, indent, res)
-		} else {
-			tmp := fmt.Sprintf("[[%s]]", strip_file_extension(entry.Name()))
-			*res += "* " + ind + tmp + "\n"
-		}
+		gen_dir_helper(path, entry, indent, res)
 	}
 }
 
